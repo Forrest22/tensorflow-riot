@@ -3,16 +3,19 @@ import tensorflow as tf
 
 # TRAIN_URL = "http://download.tensorflow.org/data/iris_training.csv"
 # TEST_URL = "http://download.tensorflow.org/data/iris_test.csv"
-TRAIN_URL = "C:\\Users\\doddfm14\\Documents\\CS 391\\Riot-API\\json data\\matches800_adv.csv"
-TEST_URL = "C:\\Users\\doddfm14\\Documents\\CS 391\\Riot-API\\json data\\matches200_adv.csv"
-
+# TRAIN_URL = "C:\\Users\\doddfm14\\Documents\\CS 391\\Riot-API\\json data\\matches800_adv.csv"
+# TEST_URL = "C:\\Users\\doddfm14\\Documents\\CS 391\\Riot-API\\json data\\matches200_adv.csv"
+TRAIN_URL = "/home/doddfm14/tensorflow-riot/json-data/matches800_adv.csv"
+TEST_URL = "/home/doddfm14/tensorflow-riot/json-data/matches200_adv.csv"
 
 CSV_COLUMN_NAMES = ["firstBlood","firstTower","firstInhibitor","firstDragon","towerKills","inhibitorKills","baronKills","dragonKills","win"]
 WIN = ['Win','Fail']
 
 def maybe_download():
-    train_path = tf.keras.utils.get_file(TRAIN_URL.split('/')[-1], TRAIN_URL)
-    test_path = tf.keras.utils.get_file(TEST_URL.split('/')[-1], TEST_URL)
+    # train_path = tf.keras.utils.get_file(TRAIN_URL.split('/')[-1], TRAIN_URL)
+    # test_path = tf.keras.utils.get_file(TEST_URL.split('/')[-1], TEST_URL)
+    train_path = TRAIN_URL
+    test_path = TEST_URL
 
     return train_path, test_path
 
