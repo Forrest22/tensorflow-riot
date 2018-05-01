@@ -30,6 +30,8 @@ parser.add_argument('--train_steps', default=1000, type=int,
 def main(argv):
     args = parser.parse_args(argv[1:])
 
+    sess = tf.get_default_session()
+
     # Fetch the data
     (train_x, train_y), (test_x, test_y) = json_data_advanced.load_data()
 
@@ -43,8 +45,8 @@ def main(argv):
         feature_columns=my_feature_columns,
         # Two hidden layers of 10 nodes each.
         hidden_units=[10, 10],
-        # The model must choose between 3 classes.
-        n_classes=3)
+        # The model must choose between 2 classes.
+        n_classes=2)
 
     # Train the Model.
     classifier.train(
@@ -60,20 +62,18 @@ def main(argv):
     print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
 
     # Generate predictions from the model
-    expected = ["Win", "Fail"]
+    expected = ["Fail", "Win"]
     predict_x = {
-        'firstBlood': [1,0],
-        'firstTower': [1,0],
-        'firstInhibitor': [1,0],
-        'firstDragon': [1,0],
-        'towerKills': [11, 2],
-        'inhibitorKills': [6,0],
-        'baronKills': [3,0],
-        'dragonKills': [3,0],
-        '': [6, 0],
-        'baronKills': [3, 0],
-        'dragonKills': [3, 0],
-
+        'p1champid': [0,0],
+        'p1masterypts': [1000,200000],
+        'p2champid': [0,0],
+        'p2masterypts': [1000,200000],
+        'p3champid': [0,0],
+        'p3masterypts': [1000,200000],
+        'p4champid': [0,0],
+        'p4masterypts': [1000,200000],
+        'p5champid': [0,0],
+        'p5masterypts': [1000,200000],
     }
 
     predictions = classifier.predict(
@@ -84,13 +84,20 @@ def main(argv):
     template = ('\nPrediction is "{}" ({:.1f}%), expected "{}"')
 
     for pred_dict, expec in zip(predictions, expected):
+	# print(pred_dict)
         class_id = pred_dict['class_ids'][0]
         probability = pred_dict['probabilities'][class_id]
 
-        print(template.format(json_data_advanced.WIN[class_id],
+        print(template.format(json_data_advanced.RESULT[class_id],
                               100 * probability, expec))
-
+    '''
+    super(classifier, self).exportsaved_model(
+    '''
+    tf.estimator.exportsaved_model(
+        "", lambda: json_data_advanced.train_input_fn(train_x, train_y,
+        args.batch_size,steps=args.train_steps))
 
 if __name__ == '__main__':
-    tf.logging.set_verbosity(tf.logging.INFO)
+    #tf.logging.set_verbosity(tf.logging.INFO)
     tf.app.run(main)
+    

@@ -8,8 +8,9 @@ import tensorflow as tf
 TRAIN_URL = "/home/doddfm14/tensorflow-riot/json-data/matches800_adv.csv"
 TEST_URL = "/home/doddfm14/tensorflow-riot/json-data/matches200_adv.csv"
 
-CSV_COLUMN_NAMES = ["firstBlood","firstTower","firstInhibitor","firstDragon","towerKills","inhibitorKills","baronKills","dragonKills","win"]
-WIN = ['Win','Fail']
+# CSV_COLUMN_NAMES = ["firstBlood","firstTower","firstInhibitor","firstDragon","towerKills","inhibitorKills","baronKills","dragonKills","win"]
+CSV_COLUMN_NAMES = ["p1champid", "p1masterypts", "p2champid", "p2masterypts", "p3champid", "p3masterypts", "p4champid", "p4masterypts", "p5champid", "p5masterypts", "result"]
+RESULT = ['Fail','Win']
 
 def maybe_download():
     # train_path = tf.keras.utils.get_file(TRAIN_URL.split('/')[-1], TRAIN_URL)
@@ -19,7 +20,7 @@ def maybe_download():
 
     return train_path, test_path
 
-def load_data(y_name='win'):
+def load_data(y_name='result'):
     """Returns the iris dataset as (train_x, train_y), (test_x, test_y)."""
     train_path, test_path = maybe_download()
 
@@ -41,6 +42,7 @@ def train_input_fn(features, labels, batch_size):
     dataset = dataset.shuffle(1000).repeat().batch(batch_size)
 
     # Return the dataset.
+    print(dataset)
     return dataset
 
 
@@ -69,7 +71,7 @@ def eval_input_fn(features, labels, batch_size):
 
 # `tf.parse_csv` sets the types of the outputs to match the examples given in
 #     the `record_defaults` argument.
-CSV_TYPES = [[0], [0], [0], [0], [0], [0], [0], [0], [0]]
+CSV_TYPES = [[0], [0], [0], [0], [0], [0], [0], [0], [0], [0], [0]]
 
 def _parse_line(line):
     # Decode the line into its fields
@@ -79,7 +81,17 @@ def _parse_line(line):
     features = dict(zip(CSV_COLUMN_NAMES, fields))
 
     # Separate the label from the features
-    label = features.pop('win')
+    label = features.pop('result')
+
+    #'''
+    features.pop('p1champid')
+    features.pop('p2champid')
+    features.pop('p3champid')
+    features.pop('p4champid')
+    features.pop('p5champid')
+    #'''
+    # print(label)
+    # print(features)
 
     return features, label
 
